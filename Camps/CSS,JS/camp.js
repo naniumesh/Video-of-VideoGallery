@@ -92,32 +92,7 @@ new URLSearchParams(window.location.search);
 const rawClass =
 params.get("class");
 
-let className = "";
-
-if(rawClass === "REPUBLIC DAY CAMP"){
-
-    className = "1A";
-}
-
-else if(rawClass === "TSC, VSC, NSC"){
-
-    className = "1B";
-}
-
-else if(rawClass === "IMA ATTACHMENT CAMP"){
-
-    className = "1C";
-}
-
-else if(rawClass === "YOUTH EXCHANGE PROGRAM"){
-
-    className = "1D";
-}
-
-else if(rawClass === "RARE CAMPS"){
-
-    className = "SPECIAL";
-}
+const className = rawClass;
 
 document.getElementById(
     "heading"
@@ -165,15 +140,35 @@ async function loadStudents(){
 
 function displayStudents(data){
 
-    const students =
-    data[className];
-
     const container =
     document.getElementById(
         "personCards"
     );
 
     container.innerHTML = "";
+
+    if(!data[className]){
+
+        container.innerHTML = `
+
+            <h2 style="
+                text-align:center;
+                width:100%;
+                margin-top:40px;
+                color:red;
+            ">
+
+                No Students Found
+
+            </h2>
+
+        `;
+
+        return;
+    }
+
+    const students =
+    data[className];
 
     students.forEach(student=>{
 
@@ -185,51 +180,51 @@ function displayStudents(data){
 
         let extraField = "";
 
-if(className === "1D"){
+        if(className === "YOUTH EXCHANGE PROGRAM"){
 
-    extraField = `
+            extraField = `
 
-        <p>
-            Place:
-            ${student.place || ""}
-        </p>
+                <p>
+                    Place:
+                    ${student.place || ""}
+                </p>
 
-    `;
-}
+            `;
+        }
 
-if(className === "SPECIAL"){
+        if(className === "RARE CAMPS"){
 
-    extraField = `
+            extraField = `
 
-        <p>
-            Camp:
-            ${student.camp || ""}
-        </p>
+                <p>
+                    Camp:
+                    ${student.camp || ""}
+                </p>
 
-    `;
-}
+            `;
+        }
 
-card.innerHTML = `
+        card.innerHTML = `
 
-    <img
-    src="${student.image}"
-    class="img-fluid">
+            <img
+            src="${student.image}"
+            class="img-fluid">
 
-    <h3>${student.name}</h3>
+            <h3>${student.name}</h3>
 
-    <p>
-        Batch:
-        ${student.batch}
-    </p>
+            <p>
+                Batch:
+                ${student.batch}
+            </p>
 
-    <p>
-        Rank:
-        ${student.rank}
-    </p>
+            <p>
+                Rank:
+                ${student.rank}
+            </p>
 
-    ${extraField}
+            ${extraField}
 
-`;
+        `;
 
         card.onclick = ()=>{
 
@@ -241,6 +236,7 @@ card.innerHTML = `
     });
 
 }
+
 
 function displayPersonDetails(student){
 
@@ -266,13 +262,13 @@ function displayPersonDetails(student){
 
     let extra = "";
 
-    if(className === "1D"){
+    if(className === "YOUTH EXCHANGE PROGRAM"){
 
         extra =
         "Place: " + student.place;
     }
 
-    if(className === "SPECIAL"){
+    if(className === "RARE CAMPS"){
 
         extra =
         "Camp: " + student.camp;
