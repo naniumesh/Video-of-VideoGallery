@@ -50,22 +50,6 @@ document.getElementById('reset-font').addEventListener('click', function() {
  });
 
 
-function displayPersonDetails(person) {
-    document.getElementById('personName').innerText = person.name;
-    document.getElementById('personBatch').innerText = person.batch;
-    document.getElementById('personRank').innerText = person.rank;
-    document.getElementById('personImage').src = person.image;
-    document.getElementById('personList').style.display = 'none';
-    document.getElementById('personDetail').style.display = 'flex'; /* Make the details view visible */
-    document.getElementById('personDetail').classList.add('fadeIn');
-}
-
-function backToList() {
-    document.getElementById('personList').style.display = 'block';
-    document.getElementById('personDetail').style.display = 'none'; /* Hide the details view */
-    loadPeople();
-}
-
 
  //Contact Modal
  function showContact() {
