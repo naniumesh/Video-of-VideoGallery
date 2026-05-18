@@ -198,9 +198,21 @@ function displayStudents(data){
             extraField = `
 
                 <p>
-                    Camp:
+                    <b>Camp:</b>
                     ${student.camp || ""}
                 </p>
+
+            `;
+        }
+
+        if(className === "TSC, VSC, NSC"){
+            
+            extraField = `
+
+            <p>
+                <b>CAMP:</b>
+                ${student.subCamp || ""}
+            </p>
 
             `;
         }
@@ -273,6 +285,11 @@ function displayPersonDetails(student){
 
         extra =
         "Camp: " + student.camp;
+    }
+    if(className === "TSC, VSC, NSC"){
+
+        extra =
+        "CAMP: " + student.subCamp;
     }
 
     document.getElementById(
