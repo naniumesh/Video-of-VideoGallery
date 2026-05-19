@@ -76,7 +76,8 @@ new URLSearchParams(window.location.search);
 const rawClass =
 params.get("class");
 
-const className = rawClass;
+const className =
+rawClass ? rawClass.trim() : "";
 
 document.getElementById(
     "heading"
@@ -90,26 +91,50 @@ document.getElementById(
 
 async function loadStudents(){
 
+    const CACHE_KEY = "studentsData";
+
     try{
 
         const res = await fetch(
             "https://camp-img-server.onrender.com/students"
         );
 
-        const data = await res.json();
+        if(!res.ok){
+
+            throw new Error(
+                "Server Error"
+            );
+        }
+
+        const data =
+        await res.json();
+
+        // SAVE CACHE
 
         localStorage.setItem(
-            "studentsData",
+            CACHE_KEY,
             JSON.stringify(data)
         );
 
-        displayStudents(data);
+        console.log(
+            "ONLINE DATA LOADED"
+        );
 
-    }catch{
+        displayStudents(data);
+        localStorage.setItem(
+            "lastStudentUpdate",
+            new Date().toISOString()
+        );
+
+    }catch(error){
+
+        console.log(
+            "OFFLINE MODE ENABLED"
+        );
 
         const offlineData =
         localStorage.getItem(
-            "studentsData"
+            CACHE_KEY
         );
 
         if(offlineData){
@@ -118,6 +143,26 @@ async function loadStudents(){
             JSON.parse(offlineData);
 
             displayStudents(data);
+
+        }else{
+
+            document.getElementById(
+                "personCards"
+            ).innerHTML = `
+
+                <h2 style="
+                    width:100%;
+                    text-align:center;
+                    color:red;
+                    margin-top:50px;
+                ">
+
+                    SERVER IS SLEEPING.<br>
+                    OPEN AGAIN AFTER FEW SECONDS.
+
+                </h2>
+
+            `;
         }
     }
 }
@@ -157,6 +202,11 @@ function displayStudents(data){
 
     const students =
     (data[className] || []).sort((a,b)=>{
+
+        if(!a.batch || !b.batch){
+            return 0;
+        }
+        
         const aYear =
         
         parseInt(
@@ -362,4 +412,7 @@ function backToList(){
     },400);
 }
 
-loadStudents();
+window.addEventListener(
+    "DOMContentLoaded",
+    loadStudents
+);
